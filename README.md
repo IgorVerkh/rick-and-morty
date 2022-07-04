@@ -1,2 +1,2 @@
-# rick-and-morty
+# Rick and Morty api app
 Android intensive course project
