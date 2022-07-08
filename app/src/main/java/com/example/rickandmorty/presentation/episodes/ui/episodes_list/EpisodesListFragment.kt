@@ -6,27 +6,71 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.fragment.app.commit
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import androidx.paging.ExperimentalPagingApi
 import com.example.rickandmorty.R
+import com.example.rickandmorty.databinding.FragmentCharactersListBinding
+import com.example.rickandmorty.databinding.FragmentEpisodesListBinding
+import com.example.rickandmorty.presentation.characters.ui.characters_list.CharactersGridAdapter
+import com.example.rickandmorty.presentation.characters.ui.characters_list.CharactersListFragment
+import com.example.rickandmorty.presentation.locations.ui.locations_list.LocationsListFragment
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
+@ExperimentalPagingApi
 class EpisodesListFragment : Fragment() {
 
-    companion object {
-        fun newInstance() = EpisodesListFragment()
-    }
-
-    private lateinit var viewModel: EpisodesListViewModel
+    private lateinit var binding: FragmentEpisodesListBinding
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_episodes_list, container, false)
+        binding = FragmentEpisodesListBinding.inflate(inflater)
+
+        binding.lifecycleOwner = this
+
+        return binding.root
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(EpisodesListViewModel::class.java)
-        // TODO: Use the ViewModel
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
+        binding.bottomNavigation.selectedItemId = R.id.episodesNavItem
+
+        binding.bottomNavigation.setOnItemSelectedListener {
+
+            when (it.itemId) {
+                R.id.charactersNavItem -> {
+                    activity?.supportFragmentManager?.commit {
+                        replace(R.id.fragment_container, CharactersListFragment())
+                    }
+                    true
+                }
+
+                R.id.episodesNavItem -> {
+                    activity?.supportFragmentManager?.commit {
+                        replace(R.id.fragment_container, EpisodesListFragment())
+                    }
+                    true
+                }
+
+                R.id.locationsNavItem -> {
+                    activity?.supportFragmentManager?.commit {
+                        replace(R.id.fragment_container, LocationsListFragment())
+                    }
+                    true
+                }
+
+                else -> false
+
+            }
+        }
+
     }
+
 
 }

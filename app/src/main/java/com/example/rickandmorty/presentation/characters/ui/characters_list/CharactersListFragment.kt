@@ -7,6 +7,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.commit
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.*
 import androidx.paging.ExperimentalPagingApi
@@ -15,6 +17,8 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.example.rickandmorty.R
 import com.example.rickandmorty.RickAndMortyApplication
 import com.example.rickandmorty.databinding.FragmentCharactersListBinding
+import com.example.rickandmorty.presentation.episodes.ui.episodes_list.EpisodesListFragment
+import com.example.rickandmorty.presentation.locations.ui.locations_list.LocationsListFragment
 import com.example.rickandmorty.presentation.mapper.toCharacterListItem
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
@@ -25,7 +29,6 @@ class CharactersListFragment : Fragment() {
 
     private lateinit var binding: FragmentCharactersListBinding
 
-    @ExperimentalPagingApi
     private val viewModel: CharactersListViewModel by viewModels {
         CharactersListViewModelFactory(activity?.application as RickAndMortyApplication)
     }
@@ -44,6 +47,8 @@ class CharactersListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
+        binding.bottomNavigation.selectedItemId = R.id.charactersNavItem
+
         val charactersGridAdapter = CharactersGridAdapter { id ->
             Toast.makeText(context, id.toString(), Toast.LENGTH_SHORT).show()
         }
@@ -57,6 +62,36 @@ class CharactersListFragment : Fragment() {
                 }
             }
         }
+
+        binding.bottomNavigation.setOnItemSelectedListener {
+
+            when (it.itemId) {
+                R.id.charactersNavItem -> {
+                    activity?.supportFragmentManager?.commit {
+                        replace(R.id.fragment_container, CharactersListFragment())
+                    }
+                    true
+                }
+
+                R.id.episodesNavItem -> {
+                    activity?.supportFragmentManager?.commit {
+                        replace(R.id.fragment_container, EpisodesListFragment())
+                    }
+                    true
+                }
+
+                R.id.locationsNavItem -> {
+                    activity?.supportFragmentManager?.commit {
+                        replace(R.id.fragment_container, LocationsListFragment())
+                    }
+                    true
+                }
+
+                else -> false
+
+            }
+        }
+
     }
 
 }
