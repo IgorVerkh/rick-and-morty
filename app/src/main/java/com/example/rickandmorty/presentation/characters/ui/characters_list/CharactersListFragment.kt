@@ -54,7 +54,6 @@ class CharactersListFragment : Fragment() {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.characters.collectLatest {
                     charactersGridAdapter.submitData(it)
-                    Log.d("Shit", it.toString())
                 }
             }
         }

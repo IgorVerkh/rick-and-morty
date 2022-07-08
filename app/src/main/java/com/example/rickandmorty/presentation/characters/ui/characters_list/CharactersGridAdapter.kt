@@ -21,13 +21,13 @@ class CharactersGridAdapter (
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: CharacterListItem,
                  clickListener: (Int) -> Unit) {
-            Log.d("Shit", "Binding an Item")
             binding.apply {
                 characterImage.load(item.image)
                 name.text = item.name
                 species.text = item.species
                 status.text = item.status
                 gender.text = item.gender
+                character.setOnClickListener { clickListener(item.id) }
             }
         }
     }
@@ -44,7 +44,6 @@ class CharactersGridAdapter (
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GridItemViewHolder {
-        Log.d("Shit", "onCreateViewHolder")
         return GridItemViewHolder(
             CharactersGridViewItemBinding.inflate(
                 LayoutInflater.from(parent.context),
@@ -54,7 +53,6 @@ class CharactersGridAdapter (
     }
 
     override fun onBindViewHolder(holder: GridItemViewHolder, position: Int) {
-        Log.d("Shit", "onBindViewHolder")
         getItem(position)?.let { holder.bind(it, clickListener) }
     }
 
